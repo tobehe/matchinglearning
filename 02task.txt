@@ -1,0 +1,55 @@
+最小二乘法 通过求解最小误差并且利用转置向量求求解 python求解
+class LR_LS():
+    def __init__(self):
+        self.w = None      
+    def fit(self, X, y):
+        # 最小二乘法矩阵求解
+        self.w = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(y) 
+    def predict(self, X):
+        # 用已经拟合的参数值预测新自变量
+        y_pred = X.dot(self.w)
+        return y_pred
+梯度下降法 负梯度方向寻找可以求出最优解。
+class LR_GD():
+    def __init__(self):
+        self.w = None     
+    def fit(self,X,y,alpha=0.02,loss = 1e-10): # 设定步长为0.002,判断是否收敛的条件为1e-10
+        y = y.reshape(-1,1) #重塑y值的维度以便矩阵运算
+        [m,d] = np.shape(X) #自变量的维度
+        self.w = np.zeros((d)).reshape(d,1) #将参数的初始值定为0
+        tol = 1e5
+        while tol > loss:
+            self.w = self.w - alpha * X.T.dot(X.dot(self.w) - y) * 2. / m
+            tol = np.sum((X.dot(self.w) - y) ** 2) / m
+
+    def predict(self, X):
+        # 用已经拟合的参数值预测新自变量
+        y_pred = X.dot(self.w)
+        return y_pred
+		
+线性回归评价指标
+均方误差
+def MSE(y_true, y_predict):
+    MSE = np.sum((y_true - y_predict) ** 2) / len(y_true)
+均方根误差
+def RMSE(y_true, y_predict):
+    RMSE = np.sum((y_true - y_predict) ** 2) / len(y_true) ** 0.5 
+平均绝对误差MAE
+def MAE(y_true, y_predict):
+    MAE = np.sum(abs(y_true - y_predict)) / len(y_true)
+R2
+def r2_score(y_true, y_predict):
+    MSE = np.sum((y_true - y_predict) ** 2) / len(y_true)
+    return 1 - MSE / np.sum((y_true - np.var(y_true)) ** 2) / len(y_true)
+线性回归模型。
+lr = LinearRegression(fit_intercept=True)
+# 训练模型
+lr.fit(x,y)
+print("估计的参数值为：%s" %(lr.coef_))
+# 计算R平方
+print('R2:%s' %(lr.score(x,y)))
+# 任意设定变量，预测目标值
+x_test = np.array([2,4,5]).reshape(1,-1)
+y_hat = lr.predict(x_test)
+print("预测值为: %s" %(y_hat))
+先把概念代码熟悉下哈，日后再具体研究下。
