@@ -1,0 +1,84 @@
+ 用梯度下降法将数据进行分类
+ class LGR_GD():
+    def __init__(self):
+        self.w = None
+        self.n_iters = None
+
+    def fit(self, X, y, alpha=0.03, loss=1e-10):  # 设定步长为0.002，判断是否收敛的条件为1e-10
+        y = y.reshape(-1, 1)  # 重塑y值的维度以便矩阵运算
+        [m, d] = np.shape(X)  # 自变量的维度
+        self.w = np.zeros((1, d))  # 将参数的初始值定为0
+        tol = 1e5
+        self.n_iters = 0
+        # ============================= show me your code =======================
+        while tol > loss:  # 设置收敛条件
+            zs = X.dot(self.w.T)
+            h_f = 1 / (1 + np.exp(-zs))
+            theta = self.w + alpha*np.mean(X*(y - h_f),axis = 0)
+            tol = np.sum(np.abs(theta - self.w))
+            self.w = theta
+            self.n_iters += 1  # 更新迭代次数
+        # ============================= show me your code =======================
+
+    def predict(self, X):
+        # 用已经拟合的参数值预测新自变量
+        y_pred = X.dot(self.w)
+        return y_pred
+
+
+if __name__ == "__main__":
+    lr_gd = LGR_GD()
+    lr_gd.fit(Xs, ys)
+	
+	ax = plt.axes()
+    df_X.query('label == 0').plot.scatter(x=0, y=1, ax=ax, color='blue')
+    df_X.query('label == 1').plot.scatter(x=0, y=1, ax=ax, color='red')
+
+    _xs = np.array([np.min(Xs[:, 1]), np.max(Xs[:, 1])])
+    _ys = (lr_gd.w[0][0] + lr_gd.w[0][1] * _xs) / (- lr_gd.w[0][2])
+    plt.plot(_xs, _ys, lw=1)
+
+
+用牛顿法实现
+class LGR_NT():
+    def __init__(self):
+        self.w = None
+        self.n_iters = None
+
+    def fit(self, X, y, loss=1e-10):  # 判断是否收敛的条件为1e-10
+        y = y.reshape(-1, 1)  # 重塑y值的维度以便矩阵运算
+        [m, d] = np.shape(X)  # 自变量的维度
+        self.w = np.zeros((1, d))  # 将参数的初始值定为0
+        tol = 1e5
+        n_iters = 0
+        Hessian = np.zeros((d, d))
+        # ============================= show me your code =======================
+        while tol > loss:
+            zs = X.dot(self.w.T)
+            h_f = 1 / (1 + np.exp(-zs))
+            grad = np.mean(X * (y - h_f), axis=0)
+            for i in range(d):
+                for j in range(d):
+                    if j >= i:
+                        Hessian[i][j] = np.mean(h_f * (h_f - 1) * X[:, i] * X[:, j])  # 更新海森矩阵中的值
+                    else:
+                        Hessian[i][j] = Hessian[j][i]  # 按海森矩阵的性质，对称点可直接得出结果
+            theta = self.w - np.linalg.inv(Hessian).dot(grad)
+            tol = np.sum(np.abs(theta - self.w))
+            self.w = theta
+            n_iters += 1
+        # ============================= show me your code =======================
+        self.w = theta
+        self.n_iters = n_iters
+
+    def predict(self, X):
+        # 用已经拟合的参数值预测新自变量
+        y_pred = X.dot(self.w)
+        return y_pred
+
+
+if __name__ == "__main__":
+    lgr_nt = LGR_NT()
+    lgr_nt.fit(Xs, ys)
+	
+继续学习中
