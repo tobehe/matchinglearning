@@ -1,0 +1,96 @@
+  def __predict_one(self, input_x):
+        """预测一个样例的返回结果.
+        
+        Paramters:
+        ---------
+        input_x : list or np.ndarray
+            需要预测输入数据
+        
+        Returns:
+        -------
+        class : 对应的类
+        """
+        
+        tree = self.decision_tree
+        #============================= show me your code =======================
+        # here
+        def run(node, tree):
+            if tree.result != None:
+                return tree.result
+            value = node[tree.col]
+            tree = tree.LeftChild if value <= tree.val else tree.RightChild
+        pre_y = run(input_x,tree)
+        #============================= show me your code =======================
+        return pre_y
+		
+
+		 def __getBestFeature(self, data):
+        """得到最优特征对应的列
+        Paramters:
+        ---------
+        data: np.ndarray
+            从data中选择最优特征
+            
+        Returns:
+        -------
+        bestInx, val, 最优特征的列的索引和使用的值.
+        """
+        best_idx = -1
+        best_val = None
+        min_gini = 1.0                
+        # 遍历现在可以使用的特征列
+        #============================= show me your code =======================
+
+        # here
+            for featColumn in self.all_feats:
+
+            data_with_feature = data[:, featColumn]  
+
+            for val in data_with_feature:
+                leftData, rightData = self.__splitData(data, featColumn, val) 
+                
+                left_gini = self.gini(labels=leftData[:, -1])
+                
+                right_gini = self.gini(labels=rightData[:, -1])
+
+                current_gini = left_gini * len(leftData) / len(data) + right_gini * len(rightData) / len(data)
+
+                if current_gini < min_gini:
+                    best_idx = featColumn
+                    best_val = val
+                    min_gini = current_gini
+
+        
+        #============================= show me your code =======================
+        # 删除使用过的特征
+        self.all_feats.remove(best_idx)
+        
+        return best_idx, best_val, min_gini
+        
+		#============================= show me your code =======================
+        # 删除使用过的特征
+        self.all_feats.remove(best_idx)
+        
+        return best_idx, best_val, min_gini
+        
+    
+    def gini(self, labels):
+        """计算基尼指数.
+        
+        Paramters:
+        ----------
+        labels: list or np.ndarray, 数据对应的类目集合.
+        
+        Returns: 
+        -------
+        gini : float ``` Gini(p) = \sum_{k=1}^{K}p_k(1-p_k)=1-\sum_{k=1}^{K}p_k^2 ```
+        
+        """
+        #============================= show me your code =======================
+
+        # here
+        self.all_feats.remove(best_idx)
+        #============================= show me your code =======================
+        return gini
+		
+好多不会，参考别人，还在学python中。		
