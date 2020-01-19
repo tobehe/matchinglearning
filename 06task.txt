@@ -1,0 +1,92 @@
+  def mean(X):
+        """计算均值
+        Param: X : list or np.ndarray
+        
+        Return:
+            avg : float
+        
+        """
+        avg = 0.0
+        # ========= show me your code ==================
+        
+         avg = np.mean(X)
+        
+        # ========= show me your code ==================
+        return avg
+
+    def stdev(self, X):
+        """计算标准差
+        Param: X : list or np.ndarray
+        
+        Return:
+            res : float
+        
+        """
+        res = 0.0
+        # ========= show me your code ==================
+
+        # here
+        res = np.std(X)
+        # ========= show me your code ==================
+        return res
+		
+	  def gaussian_probability(self, x, mean, stdev):
+        """根据均值和标注差计算x符号该高斯分布的概率
+        Parameters:
+        ----------
+        x : 输入
+        mean : 均值
+        stdev : 标准差
+        
+        Return:
+        
+        res : float， x符合的概率值
+            
+        """
+        res = 0.0
+        # ========= show me your code ==================
+        
+        # here
+        res = 1/(np.sqrt(2*np.pi)*stdev) * np.exp(- (x - mean)**2 / (2 * stdev**2))
+        # ========= show me your code ==================
+        
+        return res
+		
+	   def summarize(self, train_data):
+        """计算每个类目下对应数据的均值和标准差
+        Param: train_data : list
+        
+        Return : [mean, stdev]
+        """
+        summaries = [0.0, 0.0]
+        # ========= show me your code ==================
+        
+        # here
+         for i in range(len(train_data[0])):
+            data = [x[i] for x in train_data]
+            summaries.append((NaiveBayes.mean(data), self.stdev(data)))
+        # ========= show me your code ==================
+        return summaries
+
+  def calculate_probabilities(self, input_data):
+        """计算数据在各个高斯分布下的概率
+        Paramter:
+        input_data : 输入数据
+        
+        Return:
+        probabilities : {label : p}
+        """
+        # summaries:{0.0: [(5.0, 0.37),(3.42, 0.40)], 1.0: [(5.8, 0.449),(2.7, 0.27)]}
+        # input_data:[1.1, 2.2]
+        probabilities = {}
+        # ========= show me your code ==================
+        for label, value in self.model.items():
+            probabilities[label] = 1
+            for i in range(len(input_data)):
+                prob *= self.gaussian_probability(input_data[i], value[i][0], value[i][1])
+            probabilities[label] = prob * self.prior[label]
+            # here
+            
+        # ========= show me your code ==================
+        return probabilities
+		
